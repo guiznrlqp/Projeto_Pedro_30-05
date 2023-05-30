@@ -1,0 +1,189 @@
+package View;
+
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import DAO.UsuarioDAO;
+
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.JButton;
+import javax.swing.JPasswordField;
+import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.awt.event.ActionEvent;
+import DTO.UsuarioDTO;
+import java.awt.Color;
+import java.awt.Panel;
+import java.awt.ScrollPane;
+import java.awt.Button;
+import javax.swing.JSpinner;
+import javax.swing.JDesktopPane;
+import javax.swing.ImageIcon;
+import javax.swing.SwingConstants;
+import java.awt.Font;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import javax.swing.border.LineBorder;
+import java.awt.Rectangle;
+import javax.swing.border.CompoundBorder;
+import javax.swing.border.MatteBorder;
+
+public class frmLoginView extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField txtNomeUsuario;
+	private JPasswordField txtSenhaUsuario;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					frmLoginView frame = new frmLoginView();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public frmLoginView() {
+		setResizable(false);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 445, 550);
+		contentPane = new JPanel();
+		contentPane.setBackground(new Color(30, 144, 255));
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JLabel lblNewLabel = new JLabel("Nome de Usuario:");
+		lblNewLabel.setForeground(new Color(0, 0, 0));
+		lblNewLabel.setBounds(70, 118, 99, 14);
+		contentPane.add(lblNewLabel);
+		
+		txtNomeUsuario = new JTextField();
+		txtNomeUsuario.setBorder(new LineBorder(null, 0, true));
+		txtNomeUsuario.setForeground(Color.GRAY);
+		txtNomeUsuario.setBounds(171, 115, 161, 20);
+		contentPane.add(txtNomeUsuario);
+		txtNomeUsuario.setColumns(10);
+		
+		JLabel lblNewLabel_1 = new JLabel("Senha de Usu\u00E1rio:");
+		lblNewLabel_1.setBounds(70, 143, 89, 14);
+		contentPane.add(lblNewLabel_1);
+		
+		txtSenhaUsuario = new JPasswordField();
+		txtSenhaUsuario.setBounds(171, 140, 161, 20);
+		contentPane.add(txtSenhaUsuario);
+		
+		JButton btnEntrarSistema = new JButton("Entrar");
+		btnEntrarSistema.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					
+					String nome_usuario, senha_usuario;
+					
+					nome_usuario = txtNomeUsuario.getText();
+					senha_usuario = txtSenhaUsuario.getText();
+					
+					DTO.UsuarioDTO objusuariodto = new UsuarioDTO();
+					objusuariodto.setNome_usuario(nome_usuario);
+					objusuariodto.setSenha_usuario(senha_usuario);
+					
+					UsuarioDAO objusuariodao = new UsuarioDAO();
+					ResultSet rsusuariodao = objusuariodao.autenticacaoUsuario(objusuariodto);
+					
+					if (rsusuariodao.next()) {
+						//Chamar Tela Que Eu Quero Abrir
+						Main Main = new Main();
+						Main.setVisible(true);
+						
+						dispose();
+						
+					}else {
+						//Tela Dizendo Incorreto
+						JOptionPane.showMessageDialog(null,"Usuario ou senha invalido");
+						
+					}
+					
+				} catch (SQLException erro) {
+					JOptionPane.showMessageDialog(null,"FRMLOGINVIEW" + erro);
+					
+				}
+			}
+		});
+		btnEntrarSistema.setBounds(254, 212, 89, 23);
+		contentPane.add(btnEntrarSistema);
+		
+		JButton btnSair = new JButton("Sair");
+		btnSair.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				JFrame frmLoginView = new JFrame("Exit");
+				if(JOptionPane.showConfirmDialog(frmLoginView,"Confirm if you want to change login","Register Systems",JOptionPane.YES_NO_OPTION)==JOptionPane.YES_NO_OPTION){
+					frmLoginView.setVisible(false);
+					
+					System.exit(0);
+			
+				}
+			}
+		});
+		btnSair.setBounds(52, 212, 89, 23);
+		contentPane.add(btnSair);
+		
+		JButton btnLimpar = new JButton("Limpar");
+		btnLimpar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				txtNomeUsuario.setText(null);
+				txtSenhaUsuario.setText(null);
+			}
+		});
+		btnLimpar.setBounds(156, 212, 89, 23);
+		contentPane.add(btnLimpar);
+		
+		JLabel lblNoTemConta = new JLabel("N\u00E3o tem conta?");
+		lblNoTemConta.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		lblNoTemConta.setForeground(Color.BLACK);
+		lblNoTemConta.setBounds(72, 296, 146, 25);
+		contentPane.add(lblNoTemConta);
+		
+		JButton btnCadastrese = new JButton("Cadastre-se");
+		btnCadastrese.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				frmCadastroVIEW objfrmcadastroview = new frmCadastroVIEW();
+				objfrmcadastroview.setVisible(true);
+				
+				dispose();
+			}
+		});
+		btnCadastrese.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+			}
+		});
+		btnCadastrese.setBounds(228, 301, 104, 23);
+		contentPane.add(btnCadastrese);
+		
+		JLabel lblLogin = new JLabel("LOGIN");
+		lblLogin.setFont(new Font("Yu Gothic UI Semibold", Font.PLAIN, 30));
+		lblLogin.setForeground(Color.BLACK);
+		lblLogin.setBounds(144, 32, 99, 60);
+		contentPane.add(lblLogin);
+		
+		
+	}
+}
