@@ -1,0 +1,17 @@
+create table usuario(
+usuario_id INTEGER PRIMARY KEY AUTOINCREMENT,
+nome_usuario TEXT(250), 
+email_cadastro TEXT(250), 
+cpf_cadastro INTEGER(15), 
+telefone_cadastro INTEGER(13), 
+senha_usuario TEXT(250)
+);
+
+
+create table trainers(
+trainer_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+Trainer TEXT(250), 
+Age TEXT(100), 
+Address TEXT(15), 
+Mobile TEXT(13)
+);
