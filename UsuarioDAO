@@ -1,0 +1,151 @@
+package DAO;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import javax.swing.JOptionPane;
+
+import DTO.UsuarioDTO;
+
+public class UsuarioDAO {
+	Connection conn;
+	PreparedStatement pstm;
+	ResultSet rs;
+	ArrayList<UsuarioDTO> lista = new ArrayList<>();
+	
+	public void cadastrarCliente(UsuarioDTO  objusuariodto){
+		String sql = "insert into usuario (nome_usuario, email_cadastro, cpf_cadastro, telefone_cadastro, senha_usuario) values(?,?,?,?,?)";
+		
+		conn = new ConexaoDAO().conectaBD();
+		
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			pstm.setString(1, objusuariodto.getNome_usuario());
+			pstm.setString(2, objusuariodto.getEmail_cadastro());
+			pstm.setString(3, objusuariodto.getCpf_cadastro());
+			pstm.setString(4, objusuariodto.getTelefone_cadastro());
+			pstm.setString(5, objusuariodto.getSenha_usuario());
+			
+			pstm.execute();
+			pstm.close();
+			
+		} catch (Exception erro) {
+			JOptionPane.showMessageDialog(null, "CadastroDAO" + erro);
+		}
+	}
+	
+
+	public ResultSet autenticacaoUsuario(UsuarioDTO objusuariodto) {
+		conn = new ConexaoDAO().conectaBD();
+		
+
+		try {
+			String sql = "select * from usuario where nome_usuario = ? and senha_usuario=?";
+			
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			pstm.setString(1, objusuariodto.getNome_usuario());
+			pstm.setString(2, objusuariodto.getSenha_usuario());
+			
+			ResultSet rs = pstm.executeQuery();
+			return rs;
+
+		} catch (SQLException erro) {
+			JOptionPane.showMessageDialog(null, "UsuarioDAO: " + erro);
+			return null;
+
+		}
+
+	}
+
+	public ArrayList<UsuarioDTO> PesquisarTrainer(){
+		String sql = "select * from trainers";
+		conn = new ConexaoDAO().conectaBD();
+		
+		try {
+			PreparedStatement pstm = conn.prepareStatement(sql);
+			ResultSet rs = pstm.executeQuery();
+			
+			while (rs.next()) {
+				UsuarioDTO UsuarioDTO = new UsuarioDTO();
+				UsuarioDTO.setTrainer_id(rs.getInt("trainer_id"));
+				UsuarioDTO.setTrainer(rs.getString("Trainer"));
+				UsuarioDTO.setAge(rs.getString("Age"));
+				UsuarioDTO.setAddress(rs.getString("Address"));
+				UsuarioDTO.setMobile(rs.getString("Mobile"));
+				
+				lista.add(UsuarioDTO);
+			}
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(null, "Erro");
+		}
+		return lista;
+	}
+
+	
+	public void cadastrarTrainer(UsuarioDTO  objusuariodto){
+		String sql = "insert into trainers(Trainer,Age,Address,Mobile) values(?,?,?,?)";
+		
+		conn = new ConexaoDAO().conectaBD();
+		
+		try {
+     
+                PreparedStatement pstm = conn.prepareStatement(sql);
+                pstm.setString(1, objusuariodto.getTrainer());
+                pstm.setString(2, objusuariodto.getAge());
+                pstm.setString(3, objusuariodto.getAddress());
+                pstm.setString(4, objusuariodto.getMobile());
+
+                pstm.execute();
+                pstm.close();
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null, "" + erro);
+        }
+    }
+	
+	public void AlterarTrainer(UsuarioDTO objusuariodto) {
+		String sql ="update trainers set Trainer = ?, Age = ?, Address = ?,Mobile = ? where trainer_id = ?";
+		
+conn = new ConexaoDAO().conectaBD();
+		
+		try {
+     
+                PreparedStatement pstm = conn.prepareStatement(sql);
+                pstm.setString(1, objusuariodto.getTrainer());
+                pstm.setString(2, objusuariodto.getAge());
+                pstm.setString(3, objusuariodto.getAddress());
+                pstm.setString(4, objusuariodto.getMobile());
+                pstm.setInt(5, objusuariodto.getTrainer_id());
+
+                pstm.execute();
+                pstm.close();
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null, "" + erro);
+
+    }
+	}
+	
+	public void ExcluirTrainer(UsuarioDTO objusuariodto) {
+		String sql = "delete from trainers where  trainer_id = ?";
+		conn = new ConexaoDAO().conectaBD();
+		
+		try {
+     
+                PreparedStatement pstm = conn.prepareStatement(sql);
+                pstm.setInt(1, objusuariodto.getTrainer_id());
+
+                pstm.execute();
+                pstm.close();
+        } catch (Exception erro) {
+            JOptionPane.showMessageDialog(null, "" + erro);
+
+    }
+	}
+
+	
+
+	
+
+}
